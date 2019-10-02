@@ -1,6 +1,7 @@
-import React, { ChangeEvent } from "react";
+import React from "react";
 import DatePickerTool from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import styled from "styled-components";
 
 interface DatePickerProps {
   className?: string;
@@ -16,8 +17,13 @@ const DatePicker: React.FC<DatePickerProps> = ({
 }) => (
   <label className={className}>
     {children}
-    <DatePickerTool selected={selected} onChange={onChange} />
+    <StyledDatePickerTool selected={selected} onChange={onChange} />
   </label>
 );
+
+const StyledDatePickerTool = styled(DatePickerTool)`
+  width: 7rem;
+  min-width: 7rem;
+`;
 
 export default DatePicker;

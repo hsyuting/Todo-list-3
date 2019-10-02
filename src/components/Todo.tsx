@@ -14,7 +14,8 @@ import { RemoveCircleOutline } from "styled-icons/material/RemoveCircleOutline";
 import { Edit } from "styled-icons/boxicons-regular/Edit";
 interface TodoProps {
   todo: Todo;
-  toggleTodo?: ToggleTodo;
+  toggleTodo: ToggleTodo;
+  editTodo: EditTodo;
   removeTodo: RemoveTodo;
 }
 
@@ -40,7 +41,12 @@ function formatDate(date: Date | null) {
   return day + " " + monthNames[monthIndex] + " " + year;
 }
 
-const Todo: React.FC<TodoProps> = ({ todo, toggleTodo, removeTodo }) => {
+const Todo: React.FC<TodoProps> = ({
+  todo,
+  toggleTodo,
+  editTodo,
+  removeTodo
+}) => {
   //For editing
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
@@ -59,19 +65,17 @@ const Todo: React.FC<TodoProps> = ({ todo, toggleTodo, removeTodo }) => {
       >
         <StyledEditIcon />
       </StyledButton>
-      {toggleTodo && (
-        <Checkbox
-          className="todo-checkbox"
-          StyledIcons={{
-            checked: StyledCheckboxChecked,
-            unchecked: StyledCheckboxUnchecked
-          }}
-          checked={todo.complete || false}
-          onChange={() => {
-            toggleTodo(todo);
-          }}
-        />
-      )}
+      <Checkbox
+        className="todo-checkbox"
+        StyledIcons={{
+          checked: StyledCheckboxChecked,
+          unchecked: StyledCheckboxUnchecked
+        }}
+        checked={todo.complete || false}
+        onChange={() => {
+          toggleTodo(todo);
+        }}
+      />
       <p className="todo-description">{todo.description}</p>
       {todo.deadline !== undefined && (
         <time className="todo-time">
@@ -99,6 +103,7 @@ const Todo: React.FC<TodoProps> = ({ todo, toggleTodo, removeTodo }) => {
         <TodoEditModal
           onClose={() => setIsEditModalOpen(false)}
           todoToEdit={todo}
+          editTodo={editTodo}
         ></TodoEditModal>
       )}
     </TodoContainer>
@@ -111,6 +116,7 @@ const TodoContainer = styled.li`
   display: grid;
   grid-template-columns: 1fr ${iconSize};
   grid-auto-rows: 1fr;
+  grid-gap: 2rem;
   min-width: 5rem;
   padding: 2rem;
   max-width: 25rem;

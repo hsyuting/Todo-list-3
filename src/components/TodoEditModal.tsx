@@ -2,12 +2,9 @@ import React, { useState, ChangeEvent, KeyboardEvent } from "react";
 
 //Generic
 import { Modal } from "./generic/Modal";
-import Checkbox from "./generic/Checkbox";
 import DatePicker from "./generic/DatePicker";
 //Styling
 import styled from "styled-components";
-import { CheckboxChecked } from "styled-icons/icomoon/CheckboxChecked";
-import { CheckboxUnchecked } from "styled-icons/icomoon/CheckboxUnchecked";
 
 //Contracts
 enum TodoEditModalItemClassNames {
@@ -20,13 +17,15 @@ enum TodoEditModalItemClassNames {
 }
 interface TodoEditModalProps {
   addTodo?: AddTodo;
+  editTodo?: EditTodo;
   onClose: (
     event: React.MouseEvent<HTMLButtonElement, MouseEvent> | React.KeyboardEvent
   ) => void;
   todoToEdit?: Todo;
 }
-
+const generateTodoKey = () => Math.random().toString(36);
 const initialNewTodo: Todo = {
+  id: generateTodoKey(),
   title: "",
   description: "",
   complete: false,
@@ -39,7 +38,8 @@ const initialNewTodo: Todo = {
 const TodoEditModal: React.FC<TodoEditModalProps> = ({
   addTodo,
   onClose,
-  todoToEdit
+  todoToEdit,
+  editTodo
 }) => {
   const [newTodo, setNewTodo] = useState(
     todoToEdit ? todoToEdit : initialNewTodo
@@ -52,9 +52,6 @@ const TodoEditModal: React.FC<TodoEditModalProps> = ({
         break;
       case TodoEditModalItemClassNames.description:
         setNewTodo({ ...newTodo, description: e.target.value });
-        break;
-      case TodoEditModalItemClassNames.complete:
-        setNewTodo({ ...newTodo, complete: e.target.checked });
         break;
       case TodoEditModalItemClassNames.details:
         setNewTodo({ ...newTodo, details: e.target.value });
@@ -75,8 +72,10 @@ const TodoEditModal: React.FC<TodoEditModalProps> = ({
   ) => {
     e.preventDefault();
     onClose(e);
-    if (addTodo) addTodo(newTodo);
-    setNewTodo(initialNewTodo);
+    console.log(newTodo);
+    console.log("old todo:" + todoToEdit, "func: " + editTodo);
+    if (todoToEdit && editTodo) editTodo(newTodo);
+    else if (addTodo) addTodo(newTodo);
   };
 
   return (
@@ -98,18 +97,6 @@ const TodoEditModal: React.FC<TodoEditModalProps> = ({
           onChange={handleInputChange}
         />
 
-        <div className={"checkbox-label"}>
-          <label>{newTodo.complete ? "Completed!" : "Not complete."}</label>
-        </div>
-        <Checkbox
-          className={TodoEditModalItemClassNames.complete}
-          StyledIcons={{
-            checked: StyledCheckboxChecked,
-            unchecked: StyledCheckboxUnchecked
-          }}
-          checked={newTodo.complete || false}
-          onChange={handleInputChange}
-        />
         <input
           type="text"
           className={TodoEditModalItemClassNames.details}
@@ -136,7 +123,6 @@ const TodoEditModal: React.FC<TodoEditModalProps> = ({
   );
 };
 
-const iconSize = `4rem`;
 //Styling
 const TodoEditModalContainer = styled.div`
   display: grid;
@@ -144,9 +130,9 @@ const TodoEditModalContainer = styled.div`
   grid-template-columns: repeat(12, minmax(2rem, 1fr));
   grid-auto-rows: minmax(5rem, 1fr);
   grid-template-areas:
-    "t t t t t t t t ct ct c c"
+    "t t t t t t t t t t t t"
     "d d d d d d d d d d d d"
-    "e e e e l l l l a a a a";
+    "e e e e l l l l a a . .";
   margin-bottom: 1em;
 
   input {
@@ -182,19 +168,6 @@ const TodoEditModalContainer = styled.div`
   }
   .${TodoEditModalItemClassNames.deadline} {
     grid-area: a;
-  }
-`;
-
-const StyledCheckboxChecked = styled(CheckboxChecked)`
-  color: mediumseagreen;
-  min-width: ${iconSize};
-`;
-const StyledCheckboxUnchecked = styled(CheckboxUnchecked)`
-  min-width: ${iconSize};
-  &:hover {
-    color: mediumseagreen;
-    background-color: white;
-    border-color: mediumseagreen;
   }
 `;
 export default TodoEditModal;

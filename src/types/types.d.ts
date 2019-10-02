@@ -1,4 +1,5 @@
 type Todo = {
+  id: string;
   title: string;
   description: string;
   complete?: boolean;
@@ -9,5 +10,6 @@ type Todo = {
 
 type ToggleTodo = (selectedTodo: Todo) => void;
 type AddTodo = (newTodo: Todo) => void;
+type EditTodo = (selected: Todo) => void;
 type RemoveTodo = (selected: Todo) => void;
 type AddTodoAction = (action: string) => void;

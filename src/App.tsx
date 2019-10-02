@@ -13,6 +13,7 @@ import { Settings } from "styled-icons/material/Settings";
 
 const initialTodos: Array<Todo> = [
   {
+    id: "1",
     title:
       "Make a todo list app Make a todo list app Make a todo list app Make a todo list app Make a todo list app Make a todo list app ",
     description:
@@ -25,6 +26,7 @@ const initialTodos: Array<Todo> = [
     deadline: new Date()
   },
   {
+    id: "2",
     title: "Make a todo list app # 2",
     description:
       "finish the app today and look at tools to make it native app.",
@@ -34,6 +36,7 @@ const initialTodos: Array<Todo> = [
     deadline: new Date()
   },
   {
+    id: "3",
     title:
       "Make a todo list app Make a todo list app Make a todo list app Make a todo list app Make a todo list app Make a todo list app ",
     description:
@@ -46,6 +49,7 @@ const initialTodos: Array<Todo> = [
     deadline: new Date()
   },
   {
+    id: "4",
     title: "Make a todo list app # 2",
     description:
       "finish the app today and look at tools to make it native app.",
@@ -62,18 +66,24 @@ const App: React.FC = () => {
   const [todos, setTodos] = useState(initialTodos);
 
   const addTodo: AddTodo = newTodo => {
-    newTodo.title.trim() !== "" &&
-      newTodo.description.trim() !== "" &&
-      setTodos([...todos, newTodo]);
+    let t = newTodo.title.trim();
+    let d = newTodo.description.trim();
+    if (t !== "" && d !== "") setTodos([...todos, newTodo]);
   };
 
   const removeTodo: RemoveTodo = selected => {
-    setTodos([...todos.filter(todo => todo !== selected)]);
+    setTodos(todos.filter(todo => todo !== selected));
+  };
+
+  const editTodo: EditTodo = selectedTodo => {
+    setTodos(
+      todos.map(todo => (todo.id === selectedTodo.id ? selectedTodo : todo))
+    );
   };
 
   const toggleTodo: ToggleTodo = selectedTodo => {
     const newTodos = todos.map(todo =>
-      todo === selectedTodo ? { ...todo, complete: !todo.complete } : todo
+      todo.id === selectedTodo.id ? { ...todo, complete: !todo.complete } : todo
     );
     setTodos(newTodos);
   };
@@ -95,6 +105,7 @@ const App: React.FC = () => {
           todos={todos}
           removeTodo={removeTodo}
           toggleTodo={toggleTodo}
+          editTodo={editTodo}
         />
         {isEditModalOpen && (
           <TodoEditModal

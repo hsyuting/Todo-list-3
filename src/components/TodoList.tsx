@@ -11,32 +11,27 @@ import styled from "styled-components";
 
 interface TodoListProps {
   todos: Array<Todo>;
-  toggleTodo?: ToggleTodo;
+  toggleTodo: ToggleTodo;
+  editTodo: EditTodo;
   removeTodo: RemoveTodo;
 }
 
 const TodoList: React.FC<TodoListProps> = ({
   todos,
   toggleTodo,
+  editTodo,
   removeTodo
 }) => {
-  const generateTodoKey = () => Math.random().toString(36);
-
   return (
     <TodoListContiner>
       {todos.map(todo => (
-        <Card>
-          {toggleTodo && (
-            <Todo
-              key={generateTodoKey()}
-              todo={todo}
-              toggleTodo={toggleTodo}
-              removeTodo={removeTodo}
-            />
-          )}
-          {!toggleTodo && (
-            <Todo key={generateTodoKey()} todo={todo} removeTodo={removeTodo} />
-          )}
+        <Card key={todo.id}>
+          <Todo
+            todo={todo}
+            removeTodo={removeTodo}
+            toggleTodo={toggleTodo}
+            editTodo={editTodo}
+          />
         </Card>
       ))}
     </TodoListContiner>
